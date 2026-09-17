@@ -1,3 +1,4 @@
+// данные по фасовкам
 const PACKINGS = {
   100: {
     sku: "01306",
@@ -20,7 +21,7 @@ const PACKINGS = {
     current: 6320,
   },
 };
-
+// основные элементы на странице
 const root = document.querySelector("[data-product]");
 const skuEl = root.querySelector("[data-sku]");
 const oldPriceEl = root.querySelector("[data-price-old]");
@@ -46,7 +47,7 @@ function formatPrice(value) {
 function discountPercent(oldPrice, currentPrice) {
   return Math.round((1 - currentPrice / oldPrice) * 100);
 }
-
+// обновляем артикул, цены и кнопку фасовки
 function render(id) {
   const packing = PACKINGS[id];
   if (!packing) return;
@@ -82,25 +83,8 @@ packingButtons.forEach((btn, index) => {
   btn.addEventListener("click", () => {
     render(btn.dataset.id);
   });
-
-  btn.addEventListener("keydown", (event) => {
-    const nextKeys = ["ArrowRight", "ArrowDown"];
-    const prevKeys = ["ArrowLeft", "ArrowUp"];
-    if (![...nextKeys, ...prevKeys, "Home", "End"].includes(event.key)) return;
-
-    event.preventDefault();
-    let nextIndex = index;
-    if (nextKeys.includes(event.key)) nextIndex = (index + 1) % packingButtons.length;
-    if (prevKeys.includes(event.key)) nextIndex = (index - 1 + packingButtons.length) % packingButtons.length;
-    if (event.key === "Home") nextIndex = 0;
-    if (event.key === "End") nextIndex = packingButtons.length - 1;
-
-    const next = packingButtons[nextIndex];
-    render(next.dataset.id);
-    next.focus();
-  });
 });
-
+// кнопка "В корзину"
 cartButton.addEventListener("click", () => {
   const packing = PACKINGS[selectedId];
   const label = packingButtons.find((btn) => btn.dataset.id === selectedId)?.textContent.trim();
